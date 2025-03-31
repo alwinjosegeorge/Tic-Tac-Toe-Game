@@ -1,0 +1,137 @@
+body {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.square {
+  background: #f8f9fa;
+  border: none;
+  border-radius: 10px;
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.square:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+.square:active {
+  transform: translateY(0);
+}
+
+.square[value="X"] {
+  color: #2196F3;
+}
+
+.square[value="O"] {
+  color: #FF5722;
+}
+
+.status {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #444;
+  text-align: center;
+  height: 30px;
+}
+
+.restart {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+  font-weight: bold;
+  outline: none;
+}
+
+.restart:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.restart:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.square-animation {
+  animation: pop 0.3s ease-out;
+}
+
+.winner-square {
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+@media (max-width: 500px) {
+  .board {
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+  }
+  
+  .square {
+    height: 80px;
+    width: 80px;
+    font-size: 40px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+}
