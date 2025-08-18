@@ -1,20 +1,40 @@
-# 🎮 Tic-Tac-Toe Game
+# 🎮 Tic Tac Toe Game  
 
-A simple and responsive **Tic-Tac-Toe** game built using **HTML, CSS, and JavaScript**.  
-Play against a friend in the classic 3x3 grid format!
+A simple, fun, and responsive **Tic Tac Toe** game built with **HTML, CSS, and JavaScript**.  
+Play with a friend and relive the classic 3x3 challenge in a modern UI!  
 
-## 🚀 Live Demo
-👉 [Play Here](https://your-username.github.io/Tic-Tac-Toe-Game/)
+---
 
-## 📸 Screenshots
-![Game Screenshot](./assets/screenshot.png)
+## 🚀 Live Demo  
+👉 [Play Tic Tac Toe](https://alwinjosegeorge.github.io/Tic-Tac-Toe-Game/)  
 
-## 🛠️ Technologies Used
-- HTML5
-- CSS3 (Responsive UI)
-- JavaScript (Game Logic)
+---
 
-## 📥 Installation
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/alwinjosegeorge/Tic-Tac-Toe-Game.git
+## 📸 Screenshots  
+| Gameplay | Winner Highlight | Mobile View |
+|----------|------------------|-------------|
+| ![Game Screenshot](./assets/screenshot1.png) | ![Winner](./assets/screenshot2.png) | ![Mobile](./assets/screenshot3.png) |
+
+---
+
+## 🛠️ Tech Stack  
+- ⚡ **HTML5** – Structure  
+- 🎨 **CSS3** – Styling & Animations  
+- 🧠 **JavaScript (ES6)** – Game Logic  
+
+---
+
+## ✨ Features  
+✔ Two-player mode  
+✔ Responsive design (works on PC & Mobile)  
+✔ Winner highlight animation  
+✔ Restart button 🔄  
+✔ Clean & modern UI  
+
+---
+
+## 📥 Installation  
+
+Clone the repository:  
+```bash
+git clone https://github.com/alwinjosegeorge/Tic-Tac-Toe-Game.git
