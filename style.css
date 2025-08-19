@@ -9,7 +9,7 @@
 
 body {
   height: 100vh;
-  background: linear-gradient(135deg, #0a1435 0%, #000d1a 100%);
+  background-color: #000000; /* pure black */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,32 +19,15 @@ body {
 }
 
 main {
-  background: rgba(5, 15, 40, 0.8);
+  background-color: #050505; /* very dark near-black */
   border-radius: 24px;
-  backdrop-filter: blur(18px);
   box-shadow:
-    0 0 30px #00bfff88,
-    0 0 60px #007accaa;
+    0 0 20px #00bfff44;
   width: 360px;
   padding: 36px 44px;
   text-align: center;
   border: 2px solid #00bfff;
   position: relative;
-  animation: glowBorder 3s ease-in-out infinite alternate;
-}
-
-/* Subtle animated glowing border on main container */
-@keyframes glowBorder {
-  0% {
-    box-shadow:
-      0 0 25px #007accaa,
-      0 0 50px #00bfffbb;
-  }
-  100% {
-    box-shadow:
-      0 0 40px #00d4ffcc,
-      0 0 70px #00e0ffff;
-  }
 }
 
 #game {
@@ -57,22 +40,17 @@ main {
 }
 
 .cell {
-  background: rgba(10, 20, 50, 0.9);
+  background-color: #070707;
   border-radius: 20px;
   border: 2.5px solid #00bfff;
-  box-shadow:
-    inset 0 0 8px #00aaffaa,
-    0 0 18px #00bfffaa;
+  box-shadow: inset 0 0 6px #00bfff88;
   cursor: pointer;
   font-size: 4.3rem;
   color: #00bfff;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition:
-    background 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   user-select: none;
   outline-offset: 4px;
   position: relative;
@@ -80,11 +58,10 @@ main {
 }
 
 .cell:hover:not(:disabled) {
-  background: rgba(0, 191, 255, 0.15);
+  background-color: #001a33;
   box-shadow:
-    0 0 40px #00bfff,
-    0 0 70px #00d4ff;
-  transform: scale(1.1);
+    0 0 25px #00bfff88;
+  transform: scale(1.05);
 }
 
 /* Animate the X/O marks when they appear */
@@ -103,8 +80,7 @@ main {
     transform: scale(1);
     text-shadow:
       0 0 8px #00bfff,
-      0 0 18px #00d4ff,
-      0 0 25px #00e0ff;
+      0 0 18px #00bfffcc;
   }
 }
 
@@ -113,35 +89,30 @@ main {
   color: #003f6b;
   border-color: #003f6b;
   box-shadow:
-    inset 0 0 14px #003f6b,
-    0 0 36px #003f6b;
-  background: rgba(0, 63, 107, 0.4);
+    inset 0 0 14px #003f6b;
+  background-color: #001624;
   transform: none !important;
 }
 
 .winner {
   animation: winnerGlow 1.3s ease-in-out infinite alternate;
-  border-color: #00e0ff !important;
-  color: #00e0ff !important;
+  border-color: #00d4ff !important;
+  color: #00d4ff !important;
   box-shadow:
-    0 0 38px #00e0ff,
-    0 0 65px #00e0ff;
+    0 0 38px #00d4ff,
+    0 0 65px #00d4ff;
 }
 
 @keyframes winnerGlow {
   from {
     text-shadow:
-      0 0 20px #00d4ff,
-      0 0 40px #00e0ff,
-      0 0 55px #00e0ff,
-      0 0 70px #00e0ff;
+      0 0 20px #00bfff,
+      0 0 40px #00d4ff;
   }
   to {
     text-shadow:
-      0 0 35px #00e0ff,
-      0 0 55px #00e0ff,
-      0 0 70px #00e0ff,
-      0 0 90px #00e0ff;
+      0 0 35px #00d4ff,
+      0 0 55px #00d4ff;
   }
 }
 
@@ -156,7 +127,7 @@ main {
 }
 
 #resetBtn {
-  background: linear-gradient(90deg, #00bfff, #005f99);
+  background-color: #003366;
   border: none;
   border-radius: 16px;
   padding: 14px 32px;
@@ -165,48 +136,16 @@ main {
   color: #cceeff;
   cursor: pointer;
   box-shadow:
-    0 0 18px #00bfffcc;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+    0 0 18px #00bfffaa;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   user-select: none;
   position: relative;
   overflow: hidden;
 }
 
-#resetBtn::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, #00bfff55 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 0;
-  border-radius: 16px;
-}
-
 #resetBtn:hover {
-  background: linear-gradient(90deg, #00d4ff, #0080cc);
+  background-color: #0059b3;
   box-shadow:
-    0 0 30px #00e0ff,
-    0 0 60px #00d4ff;
-}
-
-#resetBtn:hover::before {
-  opacity: 1;
-  animation: pulseGlow 1.6s ease-in-out infinite;
-  z-index: 1;
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 1;
-  }
+    0 0 30px #00d4ff,
+    0 0 60px #00bfff;
 }
