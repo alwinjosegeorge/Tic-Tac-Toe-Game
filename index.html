@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tic Tac Toe with Bot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tic-Tac-Toe Pro Red</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main>
-    <div id="status">Your turn (X)</div>
-    <div id="game">
-      <button class="cell" data-index="0"></button>
-      <button class="cell" data-index="1"></button>
-      <button class="cell" data-index="2"></button>
-      <button class="cell" data-index="3"></button>
-      <button class="cell" data-index="4"></button>
-      <button class="cell" data-index="5"></button>
-      <button class="cell" data-index="6"></button>
-      <button class="cell" data-index="7"></button>
-      <button class="cell" data-index="8"></button>
-    </div>
-    <button id="resetBtn">Reset Game</button>
-  </main>
+<main>
+  <label id="modeSelect">
+    Mode: 
+    <select id="mode">
+      <option value="PvP">Player vs Player</option>
+      <option value="PvBot">Player vs Bot</option>
+    </select>
+  </label>
 
-  <script src="script.js"></script>
+  <div id="game">
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+    <button class="cell" data-cell></button>
+  </div>
+
+  <div id="status"></div>
+  <button id="resetBtn">Reset Game</button>
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
