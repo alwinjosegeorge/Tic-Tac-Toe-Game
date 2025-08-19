@@ -1,72 +1,62 @@
-const board = document.querySelector("#board");
-const cells = document.querySelectorAll("[data-cell]");
-const statusText = document.getElementById("status");
-const resetBtn = document.getElementById("resetBtn");
+const cells = document.querySelectorAll('.cell');
+const status = document.getElementById('status');
 
-let currentPlayer = "X";
-let running = true;
+let currentPlayer = '🐱';
+let board = Array(9).fill(null);
+let gameOver = false;
 
-// Winning patterns (indexes of cells)
 const winPatterns = [
-  [0,1,2], [3,4,5], [6,7,8], // Rows
-  [0,3,6], [1,4,7], [2,5,8], // Cols
-  [0,4,8], [2,4,6]           // Diagonals
+  [0,1,2], [3,4,5], [6,7,8], // rows
+  [0,3,6], [1,4,7], [2,5,8], // columns
+  [0,4,8], [2,4,6]           // diagonals
 ];
 
-cells.forEach(cell => cell.addEventListener("click", cellClicked));
-resetBtn.addEventListener("click", restartGame);
+cells.forEach(cell => {
+  cell.addEventListener('click', () => {
+    const index = cell.dataset.index;
 
-function cellClicked() {
-  const index = [...cells].indexOf(this);
+    if (board[index] || gameOver) return;
 
-  if (this.textContent !== "" || !running) return;
+    board[index] = currentPlayer;
+    cell.textContent = currentPlayer;
 
-  this.textContent = currentPlayer;
-  checkWinner();
-}
+    if (checkWin()) {
+      status.textContent = `${currentPlayer} wins! 🎉`;
+      gameOver = true;
+      highlightWin(checkWin());
+    } else if (board.every(cell => cell)) {
+      status.textContent = "It's a draw! 😐";
+      gameOver = true;
+    } else {
+      currentPlayer = currentPlayer === '🐱' ? '🐶' : '🐱';
+      status.textContent = `${currentPlayer}'s turn`;
+    }
+  });
+});
 
-function changePlayer() {
-  currentPlayer = (currentPlayer === "X") ? "O" : "X";
-  statusText.textContent = `Player ${currentPlayer}'s Turn`;
-}
-
-function checkWinner() {
-  let roundWon = false;
-
+function checkWin() {
   for (let pattern of winPatterns) {
     const [a, b, c] = pattern;
-    if (
-      cells[a].textContent &&
-      cells[a].textContent === cells[b].textContent &&
-      cells[a].textContent === cells[c].textContent
-    ) {
-      roundWon = true;
-      highlightWinner(pattern);
-      break;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return pattern;
     }
   }
-
-  if (roundWon) {
-    statusText.textContent = `🎉 Player ${currentPlayer} Wins!`;
-    running = false;
-  } else if ([...cells].every(cell => cell.textContent !== "")) {
-    statusText.textContent = "😅 It's a Draw!";
-    running = false;
-  } else {
-    changePlayer();
-  }
+  return null;
 }
 
-function highlightWinner(pattern) {
-  pattern.forEach(i => cells[i].classList.add("winner"));
+function highlightWin(pattern) {
+  pattern.forEach(index => {
+    cells[index].classList.add('winner');
+  });
 }
 
-function restartGame() {
-  currentPlayer = "X";
-  running = true;
-  statusText.textContent = `Player ${currentPlayer}'s Turn`;
+function resetGame() {
+  board = Array(9).fill(null);
+  gameOver = false;
+  currentPlayer = '🐱';
+  status.textContent = "🐱's turn";
   cells.forEach(cell => {
-    cell.textContent = "";
-    cell.classList.remove("winner");
+    cell.textContent = '';
+    cell.classList.remove('winner');
   });
 }
