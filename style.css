@@ -1,9 +1,9 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #fefefe;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fafafa;
   text-align: center;
-  margin-top: 30px;
-  color: #444;
+  margin: 30px;
+  color: #222;
 }
 
 h1 {
@@ -21,45 +21,46 @@ h1 {
 .cell {
   width: 100px;
   height: 100px;
-  background: #f0f0f0;
-  font-size: 2.5rem;
+  background: #eee;
+  font-size: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: background 0.3s, transform 0.2s;
+  user-select: none;
 }
 
 .cell:hover {
+  background: #ddd;
   transform: scale(1.05);
-  background: #e2e2e2;
 }
 
 .winner {
-  background-color: #b0f2b6 !important;
+  background-color: #a8e6a3 !important;
   animation: glow 1s infinite alternate;
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 0 5px #0f0; }
-  100% { box-shadow: 0 0 20px #0f0; }
+  0% { box-shadow: 0 0 8px #4CAF50; }
+  100% { box-shadow: 0 0 20px #4CAF50; }
 }
 
 #status {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin-top: 15px;
 }
 
 button {
-  padding: 10px 20px;
+  margin-top: 15px;
+  padding: 10px 25px;
   font-size: 1rem;
-  margin-top: 10px;
   cursor: pointer;
-  background: #ffd966;
+  background-color: #ffd966;
   border: none;
   border-radius: 8px;
 }
 
 button:hover {
-  background: #ffca3a;
+  background-color: #ffca3a;
 }
