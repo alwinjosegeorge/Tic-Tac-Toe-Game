@@ -9,122 +9,204 @@
 
 body {
   height: 100vh;
-  background: linear-gradient(135deg, #0d1b2a 0%, #000000 100%);
+  background: linear-gradient(135deg, #0a1435 0%, #000d1a 100%);
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Orbitron', sans-serif;
   user-select: none;
-  color: #ff3b3b; /* Red accent color */
+  color: #00bfff; /* bright blue accent */
 }
 
 main {
-  background: rgba(0, 0, 0, 0.75);
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
+  background: rgba(5, 15, 40, 0.8);
+  border-radius: 24px;
+  backdrop-filter: blur(18px);
   box-shadow:
-    0 0 25px rgba(255, 59, 59, 0.6),
-    0 0 50px rgba(255, 59, 59, 0.4);
+    0 0 30px #00bfff88,
+    0 0 60px #007accaa;
   width: 360px;
-  padding: 30px 40px;
+  padding: 36px 44px;
   text-align: center;
-  border: 1.5px solid #ff3b3b;
+  border: 2px solid #00bfff;
+  position: relative;
+  animation: glowBorder 3s ease-in-out infinite alternate;
+}
+
+/* Subtle animated glowing border on main container */
+@keyframes glowBorder {
+  0% {
+    box-shadow:
+      0 0 25px #007accaa,
+      0 0 50px #00bfffbb;
+  }
+  100% {
+    box-shadow:
+      0 0 40px #00d4ffcc,
+      0 0 70px #00e0ffff;
+  }
 }
 
 #game {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-  gap: 15px;
+  gap: 16px;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 28px;
 }
 
 .cell {
-  background: rgba(30, 30, 30, 0.8);
-  border-radius: 18px;
-  border: 2.5px solid #ff3b3b;
+  background: rgba(10, 20, 50, 0.9);
+  border-radius: 20px;
+  border: 2.5px solid #00bfff;
   box-shadow:
-    inset 0 0 8px rgba(255, 59, 59, 0.6),
-    0 0 15px rgba(255, 59, 59, 0.5);
+    inset 0 0 8px #00aaffaa,
+    0 0 18px #00bfffaa;
   cursor: pointer;
-  font-size: 4rem;
-  color: #ff3b3b;
+  font-size: 4.3rem;
+  color: #00bfff;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
   user-select: none;
-  outline-offset: 3px;
+  outline-offset: 4px;
+  position: relative;
+  overflow: hidden;
 }
 
 .cell:hover:not(:disabled) {
-  background: rgba(255, 59, 59, 0.15);
+  background: rgba(0, 191, 255, 0.15);
   box-shadow:
-    0 0 25px #ff3b3b,
-    0 0 40px #ff3b3b;
+    0 0 40px #00bfff,
+    0 0 70px #00d4ff;
   transform: scale(1.1);
+}
+
+/* Animate the X/O marks when they appear */
+.cell[data-mark] {
+  animation: fadeScaleIn 0.35s ease forwards;
+}
+
+@keyframes fadeScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    text-shadow: none;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    text-shadow:
+      0 0 8px #00bfff,
+      0 0 18px #00d4ff,
+      0 0 25px #00e0ff;
+  }
 }
 
 .cell:disabled {
   cursor: default;
-  color: #800000;
-  border-color: #800000;
+  color: #003f6b;
+  border-color: #003f6b;
   box-shadow:
-    inset 0 0 12px #800000,
-    0 0 30px #800000;
+    inset 0 0 14px #003f6b,
+    0 0 36px #003f6b;
+  background: rgba(0, 63, 107, 0.4);
+  transform: none !important;
 }
 
 .winner {
-  animation: neonGlow 1.2s ease-in-out infinite alternate;
-  border-color: #ff0000 !important;
-  color: #ff0000 !important;
+  animation: winnerGlow 1.3s ease-in-out infinite alternate;
+  border-color: #00e0ff !important;
+  color: #00e0ff !important;
   box-shadow:
-    0 0 35px #ff0000,
-    0 0 60px #ff0000;
+    0 0 38px #00e0ff,
+    0 0 65px #00e0ff;
 }
 
-@keyframes neonGlow {
+@keyframes winnerGlow {
   from {
     text-shadow:
-      0 0 15px #ff3b3b,
-      0 0 30px #ff3b3b,
-      0 0 45px #ff3b3b,
-      0 0 60px #ff3b3b;
+      0 0 20px #00d4ff,
+      0 0 40px #00e0ff,
+      0 0 55px #00e0ff,
+      0 0 70px #00e0ff;
   }
   to {
     text-shadow:
-      0 0 30px #ff0000,
-      0 0 45px #ff0000,
-      0 0 60px #ff0000,
-      0 0 75px #ff0000;
+      0 0 35px #00e0ff,
+      0 0 55px #00e0ff,
+      0 0 70px #00e0ff,
+      0 0 90px #00e0ff;
   }
 }
 
 #status {
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  color: #ff3b3b;
-  text-shadow: 0 0 6px #ff3b3b;
-  margin-bottom: 20px;
-  min-height: 1.6em;
-}
-
-#resetBtn {
-  background: linear-gradient(90deg, #ff3b3b, #a00000);
-  border: none;
-  border-radius: 15px;
-  padding: 12px 28px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #230000;
-  cursor: pointer;
-  box-shadow: 0 0 20px #ff3b3b;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  color: #00bfff;
+  text-shadow: 0 0 7px #00bfff;
+  margin-bottom: 24px;
+  min-height: 1.7em;
   user-select: none;
 }
 
+#resetBtn {
+  background: linear-gradient(90deg, #00bfff, #005f99);
+  border: none;
+  border-radius: 16px;
+  padding: 14px 32px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #cceeff;
+  cursor: pointer;
+  box-shadow:
+    0 0 18px #00bfffcc;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+#resetBtn::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #00bfff55 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 16px;
+}
+
 #resetBtn:hover {
-  background: linear-gradient(90deg, #ff0000, #6b0000);
-  box-shadow: 0 0 35px #ff0000;
+  background: linear-gradient(90deg, #00d4ff, #0080cc);
+  box-shadow:
+    0 0 30px #00e0ff,
+    0 0 60px #00d4ff;
+}
+
+#resetBtn:hover::before {
+  opacity: 1;
+  animation: pulseGlow 1.6s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
 }
