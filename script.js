@@ -47,8 +47,10 @@ function makeMove(i) {
   if (board[i] || gameOver) return;
 
   board[i] = currentPlayer;
-  cells[i].textContent = currentPlayer;
-  cells[i].disabled = true;
+  const cell = cells[i];
+  cell.textContent = currentPlayer;
+  cell.dataset.mark = currentPlayer; // trigger animation
+  cell.disabled = true;
 
   const winningCombo = checkWin();
 
@@ -80,6 +82,7 @@ resetBtn.addEventListener('click', () => {
     cell.textContent = '';
     cell.disabled = false;
     cell.classList.remove('winner');
+    delete cell.dataset.mark;
   });
   currentPlayer = 'X';
   gameOver = false;
