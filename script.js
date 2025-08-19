@@ -3,91 +3,128 @@ const status = document.getElementById('status');
 const resetBtn = document.getElementById('resetBtn');
 
 let board = Array(9).fill(null);
-let currentPlayer = 'X';
-let gameOver = false;
+const player = 'X';  // User always X
+const bot = 'O';
+let gameActive = true;
 
-const winPatterns = [
-  [0,1,2],[3,4,5],[6,7,8],
-  [0,3,6],[1,4,7],[2,5,8],
-  [0,4,8],[2,4,6]
+// Winning combos indices
+const winningCombos = [
+  [0,1,2], [3,4,5], [6,7,8], // rows
+  [0,3,6], [1,4,7], [2,5,8], // cols
+  [0,4,8], [2,4,6]           // diagonals
 ];
 
-function updateStatus(message) {
-  status.textContent = message;
-}
-
-function disableAllCells() {
-  cells.forEach(cell => cell.disabled = true);
-}
-
-function enableEmptyCells() {
-  cells.forEach((cell, i) => {
-    cell.disabled = board[i] !== null;
-  });
-}
-
-function checkWin() {
-  for (const pattern of winPatterns) {
-    const [a,b,c] = pattern;
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return pattern;
+// Check for winner or tie
+function checkWin(board, currentPlayer) {
+  for (let combo of winningCombos) {
+    if (
+      board[combo[0]] === currentPlayer &&
+      board[combo[1]] === currentPlayer &&
+      board[combo[2]] === currentPlayer
+    ) {
+      return combo;
     }
   }
   return null;
 }
 
-function highlightWinner(pattern) {
-  pattern.forEach(i => {
+function isTie(board) {
+  return board.every(cell => cell !== null);
+}
+
+// Highlight winning cells
+function highlightWinner(combo) {
+  combo.forEach(i => {
     cells[i].classList.add('winner');
     cells[i].disabled = true;
   });
 }
 
-function makeMove(i) {
-  if (board[i] || gameOver) return;
+// Bot makes a random move
+function botMove() {
+  if (!gameActive) return;
 
-  board[i] = currentPlayer;
-  const cell = cells[i];
-  cell.textContent = currentPlayer;
-  cell.dataset.mark = currentPlayer; // trigger animation
-  cell.disabled = true;
+  // Find empty cells
+  const emptyIndices = board
+    .map((val, idx) => val === null ? idx : null)
+    .filter(val => val !== null);
 
-  const winningCombo = checkWin();
+  if (emptyIndices.length === 0) return;
 
-  if (winningCombo) {
-    updateStatus(`Player ${currentPlayer} wins! 🎉`);
-    highlightWinner(winningCombo);
-    gameOver = true;
-    disableAllCells();
+  // Simple AI: random choice
+  const choice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+
+  board[choice] = bot;
+  cells[choice].textContent = bot;
+  cells[choice].disabled = true;
+
+  // Check win
+  const botWinCombo = checkWin(board, bot);
+  if (botWinCombo) {
+    highlightWinner(botWinCombo);
+    status.textContent = "Bot wins! 😞";
+    gameActive = false;
     return;
   }
 
-  if (board.every(cell => cell !== null)) {
-    updateStatus("It's a draw! 🤝");
-    gameOver = true;
+  if (isTie(board)) {
+    status.textContent = "It's a tie! 🤝";
+    gameActive = false;
     return;
   }
 
-  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-  updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
+  // Player turn now
+  status.textContent = "Your turn (X)";
+  gameActive = true;
 }
 
-cells.forEach((cell, i) => {
-  cell.addEventListener('click', () => makeMove(i));
-});
+// Handle user click
+function onCellClick(e) {
+  if (!gameActive) return;
 
-resetBtn.addEventListener('click', () => {
-  board.fill(null);
+  const index = e.target.dataset.index;
+  if (board[index] !== null) return;
+
+  // Player move
+  board[index] = player;
+  e.target.textContent = player;
+  e.target.disabled = true;
+
+  // Check win
+  const playerWinCombo = checkWin(board, player);
+  if (playerWinCombo) {
+    highlightWinner(playerWinCombo);
+    status.textContent = "You win! 🎉";
+    gameActive = false;
+    return;
+  }
+
+  if (isTie(board)) {
+    status.textContent = "It's a tie! 🤝";
+    gameActive = false;
+    return;
+  }
+
+  // Bot turn
+  status.textContent = "Bot is thinking...";
+  gameActive = false; // prevent player from clicking while bot is thinking
+
+  setTimeout(() => {
+    botMove();
+  }, 700); // delay for bot move to simulate thinking
+}
+
+// Reset game
+function resetGame() {
+  board = Array(9).fill(null);
+  gameActive = true;
+  status.textContent = "Your turn (X)";
   cells.forEach(cell => {
     cell.textContent = '';
     cell.disabled = false;
     cell.classList.remove('winner');
-    delete cell.dataset.mark;
   });
-  currentPlayer = 'X';
-  gameOver = false;
-  updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
-});
+}
 
-// Initialize status
-updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
+cells.forEach(cell => cell.addEventListener('click', onCellClick));
+resetBtn.addEventListener('click', resetGame);
