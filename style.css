@@ -1,82 +1,65 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
 body {
-  background: linear-gradient(135deg, #2c3e50, #3498db);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.game-container {
+  font-family: 'Segoe UI', sans-serif;
+  background: #fefefe;
   text-align: center;
-  background: #1c1c1c;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  margin-top: 30px;
+  color: #444;
 }
 
 h1 {
-  margin-bottom: 15px;
+  font-size: 2.5rem;
 }
 
-#status {
-  margin: 10px 0;
-  font-size: 1.2rem;
-}
-
-.board {
+#game {
   display: grid;
   grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
   gap: 10px;
+  justify-content: center;
   margin: 20px auto;
 }
 
 .cell {
-  background: #34495e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100px;
+  height: 100px;
+  background: #f0f0f0;
   font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  border-radius: 10px;
-  transition: background 0.3s;
+  transition: transform 0.2s;
 }
 
 .cell:hover {
-  background: #2ecc71;
+  transform: scale(1.05);
+  background: #e2e2e2;
 }
 
 .winner {
-  background: #e74c3c !important;
-  animation: pulse 1s infinite;
+  background-color: #b0f2b6 !important;
+  animation: glow 1s infinite alternate;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+@keyframes glow {
+  0% { box-shadow: 0 0 5px #0f0; }
+  100% { box-shadow: 0 0 20px #0f0; }
+}
+
+#status {
+  font-size: 1.5rem;
+  margin-top: 15px;
 }
 
 button {
-  background: #2ecc71;
-  color: white;
-  border: none;
   padding: 10px 20px;
   font-size: 1rem;
-  border-radius: 8px;
+  margin-top: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  background: #ffd966;
+  border: none;
+  border-radius: 8px;
 }
 
 button:hover {
-  background: #27ae60;
+  background: #ffca3a;
 }
