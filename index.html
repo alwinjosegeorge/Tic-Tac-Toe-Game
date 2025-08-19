@@ -1,358 +1,422 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tic Tac Toe Pro - PvP & Bot</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🔥 Tic Tac Toe Pro - Centered & Medium Size</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
 
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-
-  body {
-    height: 100vh;
-    background-color: #000000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Orbitron', sans-serif;
-    color: #ff3b3b;
-    user-select: none;
-  }
-
-  main {
-    background-color: #050505;
-    border-radius: 24px;
-    box-shadow: 0 0 20px #ff3b3b44;
-    width: 380px;
-    padding: 30px 40px 40px 40px;
-    text-align: center;
-    border: 2px solid #ff3b3b;
-  }
-
-  #modeSelect {
-    margin-bottom: 24px;
-    font-weight: 700;
-    font-size: 1.15rem;
-    color: #ff3b3b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  #modeSelect label {
-    user-select: none;
-  }
-
-  #modeSelect select {
-    background-color: #1a0000;
-    border: 2.5px solid #ff3b3b;
-    border-radius: 16px;
-    padding: 8px 14px;
-    color: #ff3b3b;
-    font-weight: 700;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: inset 0 0 10px #ff3b3b88;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    outline: none;
-    user-select: none;
-  }
-
-  #modeSelect select:hover,
-  #modeSelect select:focus {
-    background-color: #330000;
-    box-shadow: 0 0 25px #ff3b3b88;
-  }
-
-  #game {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 16px;
-    justify-content: center;
-    margin-bottom: 28px;
-  }
-
-  .cell {
-    background-color: #070707;
-    border-radius: 20px;
-    border: 2.5px solid #ff3b3b;
-    box-shadow: inset 0 0 6px #ff3b3b88;
-    cursor: pointer;
-    font-size: 4.3rem;
-    font-weight: 900;
-    color: #ff3b3b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-    user-select: none;
-    outline-offset: 4px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cell:hover:not(:disabled) {
-    background-color: #330000;
-    box-shadow: 0 0 25px #ff3b3b88;
-    transform: scale(1.05);
-  }
-
-  .cell[data-mark] {
-    animation: fadeScaleIn 0.35s ease forwards;
-  }
-
-  @keyframes fadeScaleIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.8);
-      text-shadow: none;
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    100% {
-      opacity: 1;
-      transform: scale(1);
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(135deg, #120000, #330000);
+      font-family: 'Orbitron', sans-serif;
+      user-select: none;
+      color: #ff3b3b;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* full viewport height */
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    main {
+      background: #1a0000;
+      border-radius: 32px;
+      box-shadow:
+        0 0 25px #ff3b3b99,
+        inset 0 0 20px #ff3b3b66;
+      width: 360px; /* smaller width */
+      max-width: 90vw;
+      padding: 48px 48px 56px;
+      text-align: center;
+      border: 3px solid #ff3b3b;
+      position: relative;
+      filter: drop-shadow(0 0 12px #ff3b3bcc);
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
       text-shadow:
-        0 0 8px #ff3b3b,
-        0 0 18px #ff3b3bcc;
+        0 0 12px #ff3b3b,
+        0 0 25px #ff3b3baa;
+      user-select: none;
     }
-  }
 
-  .cell:disabled {
-    cursor: default;
-    color: #660000;
-    border-color: #660000;
-    box-shadow: inset 0 0 14px #660000;
-    background-color: #1a0000;
-    transform: none !important;
-  }
-
-  .winner {
-    animation: winnerGlow 1.3s ease-in-out infinite alternate;
-    border-color: #ff5050 !important;
-    color: #ff5050 !important;
-    box-shadow: 0 0 38px #ff5050, 0 0 65px #ff5050;
-  }
-
-  @keyframes winnerGlow {
-    from {
-      text-shadow: 0 0 20px #ff3b3b, 0 0 40px #ff5050;
+    #modeSelect {
+      margin-bottom: 32px;
+      background-color: #330000;
+      color: #ff3b3b;
+      border: 2px solid #ff3b3b;
+      border-radius: 16px;
+      padding: 10px 22px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      transition: background-color 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 0 10px #ff3b3b88;
+      letter-spacing: 1px;
+      font-weight: 700;
     }
-    to {
-      text-shadow: 0 0 35px #ff5050, 0 0 55px #ff5050;
+
+    #modeSelect:hover {
+      background-color: #660000;
+      box-shadow:
+        0 0 18px #ff5050,
+        0 0 40px #ff3b3bcc;
     }
-  }
 
-  #status {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: #ff3b3b;
-    text-shadow: 0 0 7px #ff3b3b;
-    margin-bottom: 24px;
-    min-height: 1.7em;
-    user-select: none;
-  }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
 
-  #resetBtn {
-    background-color: #660000;
-    border: none;
-    border-radius: 16px;
-    padding: 14px 32px;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #ffbbbb;
-    cursor: pointer;
-    box-shadow: 0 0 18px #ff3b3baa;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    user-select: none;
-    position: relative;
-    overflow: hidden;
-  }
+    .cell {
+      background-color: #220000;
+      border-radius: 24px;
+      border: 3px solid #ff3b3b;
+      box-shadow:
+        inset 0 0 10px #ff3b3b99,
+        0 0 10px #ff3b3b77;
+      cursor: pointer;
+      font-size: 4.5rem;
+      color: #ff3b3b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition:
+        background-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.25s ease;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      text-shadow:
+        0 0 10px #ff3b3b,
+        0 0 20px #ff3b3b99;
+    }
 
-  #resetBtn:hover {
-    background-color: #990000;
-    box-shadow: 0 0 30px #ff5050, 0 0 60px #ff3b3b;
-  }
-</style>
+    .cell:hover:not(:disabled) {
+      background-color: #440000;
+      box-shadow:
+        0 0 30px #ff5050,
+        0 0 50px #ff3b3bcc;
+      transform: scale(1.1);
+    }
+
+    .cell:focus-visible {
+      outline: 3px solid #ff5050;
+      outline-offset: 4px;
+    }
+
+    .cell[data-mark] {
+      animation: fadeScaleIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeScaleIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.75);
+        text-shadow: none;
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        text-shadow:
+          0 0 12px #ff3b3b,
+          0 0 30px #ff3b3bcc;
+      }
+    }
+
+    .cell:disabled {
+      cursor: default;
+      color: #660000;
+      border-color: #660000;
+      box-shadow:
+        inset 0 0 20px #660000;
+      background-color: #330000;
+      transform: none !important;
+    }
+
+    .winner {
+      animation: winnerGlow 1.5s ease-in-out infinite alternate;
+      border-color: #ff5050 !important;
+      color: #ff5050 !important;
+      box-shadow:
+        0 0 45px #ff5050,
+        0 0 80px #ff5050;
+      text-shadow:
+        0 0 40px #ff5050,
+        0 0 70px #ff5050;
+    }
+
+    @keyframes winnerGlow {
+      from {
+        text-shadow:
+          0 0 28px #ff3b3b,
+          0 0 50px #ff5050;
+        box-shadow:
+          0 0 38px #ff5050,
+          0 0 65px #ff5050;
+      }
+      to {
+        text-shadow:
+          0 0 50px #ff5050,
+          0 0 90px #ff5050;
+        box-shadow:
+          0 0 58px #ff5050,
+          0 0 90px #ff5050;
+      }
+    }
+
+    #status {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ff3b3b;
+      text-shadow: 0 0 10px #ff3b3b;
+      margin-bottom: 28px;
+      min-height: 1.9em;
+      user-select: none;
+      letter-spacing: 1.5px;
+    }
+
+    #resetBtn {
+      background-color: #660000;
+      border: none;
+      border-radius: 20px;
+      padding: 14px 36px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffbbbb;
+      cursor: pointer;
+      box-shadow:
+        0 0 25px #ff3b3baa;
+      transition: background-color 0.4s ease, box-shadow 0.4s ease;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 1.2px;
+    }
+
+    #resetBtn:hover {
+      background-color: #aa0000;
+      box-shadow:
+        0 0 40px #ff5050,
+        0 0 80px #ff3b3b;
+      transform: scale(1.05);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 420px) {
+      main {
+        width: 320px;
+        padding: 40px 36px 48px;
+      }
+      #game {
+        grid-template-columns: repeat(3, 90px);
+        grid-template-rows: repeat(3, 90px);
+        gap: 16px;
+      }
+      .cell {
+        font-size: 4rem;
+      }
+      h1 {
+        font-size: 2.4rem;
+      }
+      #modeSelect {
+        font-size: 1.1rem;
+      }
+      #resetBtn {
+        font-size: 1.1rem;
+        padding: 12px 28px;
+      }
+    }
+
+  </style>
 </head>
 <body>
-<main>
-  <div id="modeSelect" aria-label="Select game mode">
-    <label for="mode">Mode:</label>
-    <select id="mode" aria-live="polite" aria-atomic="true">
-      <option value="pvp" selected>Player vs Player</option>
+  <main role="main" aria-label="Tic Tac Toe Game">
+    <h1>Tic Tac Toe Pro</h1>
+    <select id="modeSelect" aria-label="Select game mode" title="Select Game Mode">
+      <option value="pvp">Player vs Player</option>
       <option value="bot">Player vs Bot</option>
     </select>
-  </div>
+    <div id="status" aria-live="polite" role="status">🕹️ Player X's turn</div>
+    <div id="game" role="grid" aria-label="Tic Tac Toe board" tabindex="0">
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 1"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 2"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 3"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 4"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 5"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 6"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 7"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 8"></button>
+      <button class="cell" role="gridcell" aria-pressed="false" aria-label="Cell 9"></button>
+    </div>
+    <button id="resetBtn" aria-label="Reset game" title="Reset Game">Reset</button>
+  </main>
 
-  <div id="status" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script>
+    const cells = document.querySelectorAll('.cell');
+    const status = document.getElementById('status');
+    const resetBtn = document.getElementById('resetBtn');
+    const modeSelect = document.getElementById('modeSelect');
 
-  <div id="game" role="grid" aria-label="Tic Tac Toe Board">
-    <button class="cell" role="gridcell" aria-label="Cell 1" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 2" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 3" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 4" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 5" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 6" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 7" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 8" aria-pressed="false"></button>
-    <button class="cell" role="gridcell" aria-label="Cell 9" aria-pressed="false"></button>
-  </div>
+    let board = Array(9).fill(null);
+    let currentPlayer = 'X';
+    let gameOver = false;
+    let mode = 'pvp'; // default
 
-  <button id="resetBtn" aria-label="Reset Game">Reset</button>
-</main>
+    const winPatterns = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
 
-<script>
-  const cells = document.querySelectorAll('.cell');
-  const status = document.getElementById('status');
-  const resetBtn = document.getElementById('resetBtn');
-  const modeSelect = document.getElementById('mode');
-
-  let board = Array(9).fill(null);
-  let currentPlayer = 'X';
-  let gameOver = false;
-  let mode = 'pvp';
-
-  const winPatterns = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-
-  function updateStatus(message) {
-    status.textContent = message;
-  }
-
-  function disableAllCells() {
-    cells.forEach(cell => cell.disabled = true);
-  }
-
-  function enableEmptyCells() {
-    cells.forEach((cell, i) => {
-      cell.disabled = board[i] !== null;
-    });
-  }
-
-  function checkWin() {
-    for (const pattern of winPatterns) {
-      const [a,b,c] = pattern;
-      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        return pattern;
-      }
-    }
-    return null;
-  }
-
-  function highlightWinner(pattern) {
-    pattern.forEach(i => {
-      cells[i].classList.add('winner');
-      cells[i].disabled = true;
-    });
-  }
-
-  function makeMove(i) {
-    if (board[i] || gameOver) return;
-
-    board[i] = currentPlayer;
-    cells[i].textContent = currentPlayer;
-    cells[i].dataset.mark = currentPlayer;
-    cells[i].disabled = true;
-    cells[i].setAttribute('aria-pressed', 'true');
-
-    const winningCombo = checkWin();
-
-    if (winningCombo) {
-      updateStatus(`Player ${currentPlayer} wins! 🎉`);
-      highlightWinner(winningCombo);
-      gameOver = true;
-      disableAllCells();
-      return;
+    function updateStatus(message) {
+      status.textContent = message;
     }
 
-    if (board.every(cell => cell !== null)) {
-      updateStatus("It's a draw! 🤝");
-      gameOver = true;
-      disableAllCells();
-      return;
+    function disableAllCells() {
+      cells.forEach(cell => cell.disabled = true);
     }
 
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
-    enableEmptyCells();
-
-    if (mode === 'bot' && !gameOver && currentPlayer === 'O') {
-      botMove();
+    function enableEmptyCells() {
+      cells.forEach((cell, i) => {
+        cell.disabled = board[i] !== null;
+      });
     }
-  }
 
-  function botMove() {
-    // Simple bot: pick random empty cell after delay
-    const emptyIndices = board
-      .map((val, idx) => val === null ? idx : null)
-      .filter(i => i !== null);
-
-    if (emptyIndices.length === 0) return;
-
-    updateStatus("🤖 Bot is thinking...");
-    disableAllCells();
-
-    setTimeout(() => {
-      // Basic AI: first try to win, else block, else random
-      let move = findBestMove('O') || findBestMove('X') || emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-      makeMove(move);
-    }, 600);
-  }
-
-  // Helper for bot: check if it can win/block in next move
-  function findBestMove(player) {
-    for (let i = 0; i < 9; i++) {
-      if (!board[i]) {
-        board[i] = player;
-        if (checkWin()) {
-          board[i] = null;
-          return i;
+    function checkWin() {
+      for (const pattern of winPatterns) {
+        const [a,b,c] = pattern;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return pattern;
         }
-        board[i] = null;
+      }
+      return null;
+    }
+
+    function highlightWinner(pattern) {
+      pattern.forEach(i => {
+        cells[i].classList.add('winner');
+        cells[i].disabled = true;
+        cells[i].setAttribute('aria-pressed', 'true');
+      });
+    }
+
+    function makeMove(i) {
+      if (board[i] || gameOver) return;
+
+      board[i] = currentPlayer;
+      cells[i].textContent = currentPlayer;
+      cells[i].dataset.mark = currentPlayer;
+      cells[i].disabled = true;
+      cells[i].setAttribute('aria-pressed', 'true');
+
+      const winningCombo = checkWin();
+
+      if (winningCombo) {
+        updateStatus(`Player ${currentPlayer} wins! 🎉`);
+        highlightWinner(winningCombo);
+        gameOver = true;
+        disableAllCells();
+        return;
+      }
+
+      if (board.every(cell => cell !== null)) {
+        updateStatus("It's a draw! 🤝");
+        gameOver = true;
+        disableAllCells();
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
+      enableEmptyCells();
+
+      if (mode === 'bot' && currentPlayer === 'O' && !gameOver) {
+        botMove();
       }
     }
-    return null;
-  }
 
-  function resetGame() {
-    board.fill(null);
-    gameOver = false;
-    currentPlayer = 'X';
-    updateStatus("🕹️ Player X's turn");
+    function botMove() {
+      const emptyIndices = board
+        .map((val, idx) => val === null ? idx : null)
+        .filter(i => i !== null);
 
-    cells.forEach(cell => {
-      cell.textContent = '';
-      delete cell.dataset.mark;
-      cell.classList.remove('winner');
-      cell.disabled = false;
-      cell.setAttribute('aria-pressed', 'false');
+      if (emptyIndices.length === 0) return;
+
+      setTimeout(() => {
+        let move = findBestMove('O') || findBestMove('X') || emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+        makeMove(move);
+      }, 600);
+    }
+
+    function findBestMove(player) {
+      for (const pattern of winPatterns) {
+        const marks = pattern.map(i => board[i]);
+        const countPlayer = marks.filter(m => m === player).length;
+        const countEmpty = marks.filter(m => m === null).length;
+
+        if (countPlayer === 2 && countEmpty === 1) {
+          return pattern.find(i => board[i] === null);
+        }
+      }
+      return null;
+    }
+
+    function resetGame() {
+      board.fill(null);
+      gameOver = false;
+      currentPlayer = 'X';
+      updateStatus("🕹️ Player X's turn");
+
+      cells.forEach((cell, i) => {
+        cell.textContent = '';
+        cell.classList.remove('winner');
+        cell.disabled = false;
+        cell.setAttribute('aria-pressed', 'false');
+        delete cell.dataset.mark;
+      });
+
+      if (mode === 'bot' && currentPlayer === 'O') {
+        botMove();
+      }
+    }
+
+    cells.forEach((cell, i) => {
+      cell.addEventListener('click', () => makeMove(i));
     });
 
-    if (mode === 'bot' && currentPlayer === 'O') {
-      botMove();
-    }
-  }
+    resetBtn.addEventListener('click', resetGame);
 
-  cells.forEach((cell, i) => {
-    cell.addEventListener('click', () => makeMove(i));
-  });
+    modeSelect.addEventListener('change', e => {
+      mode = e.target.value;
+      resetGame();
+    });
 
-  resetBtn.addEventListener('click', resetGame);
-
-  modeSelect.addEventListener('change', e => {
-    mode = e.target.value;
     resetGame();
-  });
-
-  resetGame();
-</script>
+  </script>
 </body>
 </html>
