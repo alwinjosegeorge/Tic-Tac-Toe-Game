@@ -63,32 +63,28 @@ function makeMove(i) {
   if (board.every(cell => cell !== null)) {
     updateStatus("It's a draw! 🤝");
     gameOver = true;
-    disableAllCells();
     return;
   }
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
-  enableEmptyCells();
-}
-
-function resetGame() {
-  board.fill(null);
-  gameOver = false;
-  currentPlayer = 'X';
-  updateStatus("🕹️ Player X's turn");
-
-  cells.forEach(cell => {
-    cell.textContent = '';
-    cell.classList.remove('winner');
-    cell.disabled = false;
-  });
 }
 
 cells.forEach((cell, i) => {
   cell.addEventListener('click', () => makeMove(i));
 });
 
-resetBtn.addEventListener('click', resetGame);
+resetBtn.addEventListener('click', () => {
+  board.fill(null);
+  cells.forEach(cell => {
+    cell.textContent = '';
+    cell.disabled = false;
+    cell.classList.remove('winner');
+  });
+  currentPlayer = 'X';
+  gameOver = false;
+  updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
+});
 
-resetGame();
+// Initialize status
+updateStatus(`🕹️ Player ${currentPlayer}'s turn`);
