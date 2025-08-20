@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Tic Tac Toe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       margin: 0;
@@ -13,16 +14,18 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 10px;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: #00d4ff;
       text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      text-align: center;
     }
 
     .controls {
@@ -30,27 +33,32 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      width: 100%;
+      max-width: 320px;
     }
 
     .btn-group {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
+      width: 100%;
     }
 
     button, select {
       background: #00d4ff;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 16px;
       border-radius: 10px;
       font-size: 1rem;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
       color: #000;
       transition: all 0.2s ease-in-out;
       box-shadow: 0 4px 10px rgba(0, 212, 255, 0.4);
+      flex: 1;
+      user-select: none;
     }
 
     button:hover, select:hover {
@@ -58,24 +66,33 @@
       transform: scale(1.05);
     }
 
+    select {
+      max-width: 160px;
+      text-align-last: center;
+    }
+
     .board {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
+      grid-template-columns: repeat(3, minmax(70px, 90px));
+      grid-template-rows: repeat(3, minmax(70px, 90px));
       gap: 10px;
+      user-select: none;
+      max-width: 280px;
+      width: 100%;
     }
 
     .cell {
       background: #0f3460;
-      border-radius: 12px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
-      font-weight: bold;
+      font-size: 2.2rem;
+      font-weight: 800;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s ease;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      touch-action: manipulation;
     }
 
     .cell:hover {
@@ -85,29 +102,38 @@
     .cell.win {
       background-color: #08f7fe;
       color: #000;
-      transform: scale(1.1);
+      transform: scale(1.15);
     }
 
     .status {
-      margin-top: 20px;
-      font-size: 1.3rem;
-      font-weight: bold;
+      margin-top: 18px;
+      font-size: 1.2rem;
+      font-weight: 700;
       color: #f0f0f0;
+      min-height: 30px;
+      text-align: center;
+      max-width: 280px;
+      width: 100%;
+      user-select: none;
     }
 
     .restart-wrap {
-      margin-top: 15px;
+      margin-top: 18px;
+      width: 100%;
+      max-width: 280px;
+      text-align: center;
     }
 
     /* Confetti styles */
     .confetti-piece {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background-color: #f8e71c;
       opacity: 0.8;
       animation: fall 1s ease-out forwards;
       z-index: 999;
+      border-radius: 2px;
     }
 
     @keyframes fall {
@@ -116,26 +142,50 @@
         opacity: 0;
       }
     }
+
+    /* Responsive tweaks */
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      button, select {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+      }
+
+      .cell {
+        font-size: 2rem;
+        min-width: 60px;
+        min-height: 60px;
+      }
+
+      .status {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Tic Tac Toe</h1>
 
   <div class="controls">
-    <select id="difficulty" onchange="setDifficulty(this.value)">
+    <select id="difficulty" onchange="setDifficulty(this.value)" style="display:none;">
       <option value="hard" selected>🎯 Hard</option>
       <option value="medium">😎 Medium</option>
       <option value="easy">🎲 Easy</option>
     </select>
 
     <div class="btn-group">
-      <button onclick="setMode('bot')">🤖 Player vs Bot</button>
-      <button onclick="setMode('player')">👥 Player vs Player</button>
+      <button id="botBtn" onclick="setMode('bot')">🤖 Player vs Bot</button>
+      <button id="playerBtn" onclick="setMode('player')">👥 Player vs Player</button>
     </div>
   </div>
 
-  <div class="board" id="board"></div>
-  <div class="status" id="status"></div>
+  <div class="board" id="board" role="grid" aria-label="Tic Tac Toe Board"></div>
+
+  <div class="status" id="status" aria-live="polite">Player X's Turn</div>
+
   <div class="restart-wrap">
     <button onclick="resetGame()">🔄 Restart Game</button>
   </div>
@@ -143,6 +193,10 @@
   <script>
     const boardEl = document.getElementById("board");
     const statusEl = document.getElementById("status");
+    const difficultyEl = document.getElementById("difficulty");
+    const botBtn = document.getElementById("botBtn");
+    const playerBtn = document.getElementById("playerBtn");
+
     let board = Array(9).fill(null);
     let currentPlayer = "X";
     let gameOver = false;
@@ -151,7 +205,23 @@
 
     function setMode(selectedMode) {
       mode = selectedMode;
+      if (mode === "bot") {
+        difficultyEl.style.display = "inline-block";
+      } else {
+        difficultyEl.style.display = "none";
+      }
       resetGame();
+      updateModeButtons();
+    }
+
+    function updateModeButtons() {
+      if (mode === "bot") {
+        botBtn.style.background = "#08f7fe";
+        playerBtn.style.background = "#00d4ff";
+      } else {
+        playerBtn.style.background = "#08f7fe";
+        botBtn.style.background = "#00d4ff";
+      }
     }
 
     function setDifficulty(level) {
@@ -172,8 +242,17 @@
       board.forEach((cell, i) => {
         const cellEl = document.createElement("div");
         cellEl.classList.add("cell");
+        cellEl.setAttribute("role", "button");
+        cellEl.setAttribute("tabindex", "0");
+        cellEl.setAttribute("aria-label", `Cell ${i+1} ${cell ? 'occupied by ' + cell : 'empty'}`);
         cellEl.textContent = cell || "";
         cellEl.addEventListener("click", () => makeMove(i));
+        cellEl.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            makeMove(i);
+          }
+        });
         boardEl.appendChild(cellEl);
       });
     }
@@ -192,7 +271,7 @@
         return;
       }
 
-      if (board.every(cell => cell)) {
+      if (board.every(cell => cell !== null)) {
         statusEl.textContent = "It's a Draw!";
         gameOver = true;
         return;
@@ -224,20 +303,30 @@
     }
 
     function minimax(newBoard, player) {
-      const availSpots = newBoard.map((val, idx) => val === null ? idx : null).filter(val => val !== null);
+      const availSpots = newBoard.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
 
-      if (checkWinner(newBoard, "X")) return { score: -10 };
-      if (checkWinner(newBoard, "O")) return { score: 10 };
-      if (availSpots.length === 0) return { score: 0 };
+      if (checkWinner(newBoard, "X")) {
+        return { score: -10 };
+      } else if (checkWinner(newBoard, "O")) {
+        return { score: 10 };
+      } else if (availSpots.length === 0) {
+        return { score: 0 };
+      }
 
       const moves = [];
+
       for (let i = 0; i < availSpots.length; i++) {
         const move = {};
         move.index = availSpots[i];
         newBoard[availSpots[i]] = player;
 
-        const result = minimax(newBoard, player === "O" ? "X" : "O");
-        move.score = result.score;
+        if (player === "O") {
+          const result = minimax(newBoard, "X");
+          move.score = result.score;
+        } else {
+          const result = minimax(newBoard, "O");
+          move.score = result.score;
+        }
 
         newBoard[availSpots[i]] = null;
         moves.push(move);
@@ -264,18 +353,25 @@
       return moves[bestMove];
     }
 
-    function checkWinner(b, p) {
+    function checkWinner(boardToCheck, player) {
       const wins = [
         [0,1,2],[3,4,5],[6,7,8],
         [0,3,6],[1,4,7],[2,5,8],
         [0,4,8],[2,4,6]
       ];
-      return wins.find(pattern => pattern.every(i => b[i] === p)) || null;
+      for (const pattern of wins) {
+        if (
+          boardToCheck[pattern[0]] === player &&
+          boardToCheck[pattern[1]] === player &&
+          boardToCheck[pattern[2]] === player
+        ) return pattern;
+      }
+      return null;
     }
 
     function highlightWinner(pattern) {
-      const cells = document.querySelectorAll(".cell");
       pattern.forEach(i => {
+        const cells = boardEl.querySelectorAll(".cell");
         cells[i].classList.add("win");
       });
     }
@@ -294,7 +390,8 @@
       }
     }
 
-    resetGame();
+    // Initialize
+    setMode("bot");
   </script>
 </body>
 </html>
