@@ -14,22 +14,23 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      overflow: hidden;
     }
 
     h1 {
-      margin-bottom: 10px;
       font-size: 2.5rem;
       font-weight: 700;
       color: #00d4ff;
       text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+      margin-bottom: 10px;
     }
 
     .controls {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .btn-group {
@@ -37,36 +38,6 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 10px;
-    }
-
-    .cell {
-      background: #0f3460;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-    .cell:hover {
-      background: #1a508b;
-    }
-
-    .cell.win {
-      background-color: #08f7fe;
-      color: #000;
-      transform: scale(1.1);
     }
 
     button, select {
@@ -87,6 +58,36 @@
       transform: scale(1.05);
     }
 
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 10px;
+    }
+
+    .cell {
+      background: #0f3460;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .cell:hover {
+      background: #1a508b;
+    }
+
+    .cell.win {
+      background-color: #08f7fe;
+      color: #000;
+      transform: scale(1.1);
+    }
+
     .status {
       margin-top: 20px;
       font-size: 1.3rem;
@@ -97,6 +98,24 @@
     .restart-wrap {
       margin-top: 15px;
     }
+
+    /* Confetti styles */
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #f8e71c;
+      opacity: 0.8;
+      animation: fall 1s ease-out forwards;
+      z-index: 999;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(300px) rotate(720deg);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -104,7 +123,7 @@
 
   <div class="controls">
     <select id="difficulty" onchange="setDifficulty(this.value)">
-      <option value="hard" selected>🎯 Hard (Unbeatable)</option>
+      <option value="hard" selected>🎯 Hard</option>
       <option value="medium">😎 Medium</option>
       <option value="easy">🎲 Easy</option>
     </select>
@@ -116,11 +135,9 @@
   </div>
 
   <div class="board" id="board"></div>
-
   <div class="status" id="status"></div>
-
   <div class="restart-wrap">
-    <button onclick="resetGame(true)">🔄 Restart Game</button>
+    <button onclick="resetGame()">🔄 Restart Game</button>
   </div>
 
   <script>
@@ -142,17 +159,10 @@
       resetGame();
     }
 
-    function resetGame(fullReset = false) {
+    function resetGame() {
       board = Array(9).fill(null);
       currentPlayer = "X";
       gameOver = false;
-
-      if (fullReset) {
-        mode = "bot";
-        difficulty = "hard";
-        document.getElementById("difficulty").value = "hard";
-      }
-
       renderBoard();
       statusEl.textContent = "Player X's Turn";
     }
@@ -178,6 +188,7 @@
         highlightWinner(winPattern);
         statusEl.textContent = currentPlayer + " Wins!";
         gameOver = true;
+        celebrate();
         return;
       }
 
@@ -191,7 +202,7 @@
       statusEl.textContent = "Player " + currentPlayer + "'s Turn";
 
       if (mode === "bot" && currentPlayer === "O" && !gameOver) {
-        setTimeout(botMove, 400);
+        setTimeout(botMove, 500);
       }
     }
 
@@ -269,7 +280,21 @@
       });
     }
 
-    resetGame(true);
+    function celebrate() {
+      const count = 30;
+      const boardRect = boardEl.getBoundingClientRect();
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'confetti-piece';
+        dot.style.left = (boardRect.left + Math.random() * boardRect.width) + 'px';
+        dot.style.top = (boardRect.top + Math.random() * boardRect.height) + 'px';
+        dot.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        document.body.appendChild(dot);
+        setTimeout(() => dot.remove(), 1200);
+      }
+    }
+
+    resetGame();
   </script>
 </body>
 </html>
