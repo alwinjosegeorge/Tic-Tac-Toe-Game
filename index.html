@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tic Tac Toe</title>
   <style>
     body {
@@ -17,35 +17,26 @@
     }
 
     h1 {
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       font-size: 2.5rem;
       font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
       color: #00d4ff;
       text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
     }
 
-    .mode-select {
-      margin-bottom: 20px;
+    .controls {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
 
-    button {
-      background: #00d4ff;
-      border: none;
-      padding: 10px 18px;
-      margin: 5px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      color: #000;
-      transition: all 0.2s ease-in-out;
-    }
-
-    button:hover {
-      background: #08f7fe;
-      transform: scale(1.05);
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
     }
 
     .board {
@@ -64,170 +55,221 @@
       font-size: 2.5rem;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s ease;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
     .cell:hover {
       background: #1a508b;
     }
 
+    .cell.win {
+      background-color: #08f7fe;
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    button, select {
+      background: #00d4ff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 212, 255, 0.4);
+    }
+
+    button:hover, select:hover {
+      background: #08f7fe;
+      transform: scale(1.05);
+    }
+
     .status {
       margin-top: 20px;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
       color: #f0f0f0;
+    }
+
+    .restart-wrap {
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <h1>Tic Tac Toe</h1>
 
-  <div class="mode-select">
-    <button onclick="setMode('bot')">🤖 Player vs Bot</button>
-    <button onclick="setMode('player')">👥 Player vs Player</button>
+  <div class="controls">
+    <select id="difficulty" onchange="setDifficulty(this.value)">
+      <option value="hard" selected>🎯 Hard (Unbeatable)</option>
+      <option value="medium">😎 Medium</option>
+      <option value="easy">🎲 Easy</option>
+    </select>
+
+    <div class="btn-group">
+      <button onclick="setMode('bot')">🤖 Player vs Bot</button>
+      <button onclick="setMode('player')">👥 Player vs Player</button>
+    </div>
   </div>
 
   <div class="board" id="board"></div>
+
   <div class="status" id="status"></div>
+
+  <div class="restart-wrap">
+    <button onclick="resetGame(true)">🔄 Restart Game</button>
+  </div>
 
   <script>
     const boardEl = document.getElementById("board");
-const statusEl = document.getElementById("status");
-let board = Array(9).fill(null);
-let currentPlayer = "X";
-let gameOver = false;
-let mode = "bot"; // default
+    const statusEl = document.getElementById("status");
+    let board = Array(9).fill(null);
+    let currentPlayer = "X";
+    let gameOver = false;
+    let mode = "bot";
+    let difficulty = "hard";
 
-function setMode(selectedMode) {
-  mode = selectedMode;
-  resetGame();
-}
-
-function resetGame() {
-  board = Array(9).fill(null);
-  currentPlayer = "X";
-  gameOver = false;
-  renderBoard();
-  statusEl.textContent = "Player X's Turn";
-}
-
-function renderBoard() {
-  boardEl.innerHTML = "";
-  board.forEach((cell, i) => {
-    const cellEl = document.createElement("div");
-    cellEl.classList.add("cell");
-    cellEl.textContent = cell || "";
-    cellEl.addEventListener("click", () => makeMove(i));
-    boardEl.appendChild(cellEl);
-  });
-}
-
-function makeMove(i) {
-  if (board[i] || gameOver) return;
-  board[i] = currentPlayer;
-  renderBoard();
-
-  if (checkWinner(board, currentPlayer)) {
-    statusEl.textContent = currentPlayer + " Wins!";
-    gameOver = true;
-    return;
-  }
-
-  if (board.every(cell => cell)) {
-    statusEl.textContent = "It's a Draw!";
-    gameOver = true;
-    return;
-  }
-
-  currentPlayer = currentPlayer === "X" ? "O" : "X";
-  statusEl.textContent = "Player " + currentPlayer + "'s Turn";
-
-  if (mode === "bot" && currentPlayer === "O" && !gameOver) {
-    // Bot plays after short delay
-    setTimeout(botMove, 500);
-  }
-}
-
-function botMove() {
-  const bestMove = minimax(board, "O").index;
-  makeMove(bestMove);
-}
-
-function minimax(newBoard, player) {
-  // Available spots
-  const availSpots = newBoard
-    .map((val, idx) => val === null ? idx : null)
-    .filter(val => val !== null);
-
-  // Check terminal states
-  if (checkWinner(newBoard, "X")) {
-    return { score: -10 };
-  } else if (checkWinner(newBoard, "O")) {
-    return { score: 10 };
-  } else if (availSpots.length === 0) {
-    return { score: 0 };
-  }
-
-  // Collect all moves and their scores
-  const moves = [];
-
-  for (let i = 0; i < availSpots.length; i++) {
-    const move = {};
-    move.index = availSpots[i];
-    newBoard[availSpots[i]] = player;
-
-    if (player === "O") {
-      const result = minimax(newBoard, "X");
-      move.score = result.score;
-    } else {
-      const result = minimax(newBoard, "O");
-      move.score = result.score;
+    function setMode(selectedMode) {
+      mode = selectedMode;
+      resetGame();
     }
 
-    newBoard[availSpots[i]] = null; // Undo move
-    moves.push(move);
-  }
+    function setDifficulty(level) {
+      difficulty = level;
+      resetGame();
+    }
 
-  // Choose best move
-  let bestMove;
-  if (player === "O") {
-    let bestScore = -Infinity;
-    for (let i = 0; i < moves.length; i++) {
-      if (moves[i].score > bestScore) {
-        bestScore = moves[i].score;
-        bestMove = i;
+    function resetGame(fullReset = false) {
+      board = Array(9).fill(null);
+      currentPlayer = "X";
+      gameOver = false;
+
+      if (fullReset) {
+        mode = "bot";
+        difficulty = "hard";
+        document.getElementById("difficulty").value = "hard";
+      }
+
+      renderBoard();
+      statusEl.textContent = "Player X's Turn";
+    }
+
+    function renderBoard() {
+      boardEl.innerHTML = "";
+      board.forEach((cell, i) => {
+        const cellEl = document.createElement("div");
+        cellEl.classList.add("cell");
+        cellEl.textContent = cell || "";
+        cellEl.addEventListener("click", () => makeMove(i));
+        boardEl.appendChild(cellEl);
+      });
+    }
+
+    function makeMove(i) {
+      if (board[i] || gameOver) return;
+      board[i] = currentPlayer;
+      renderBoard();
+
+      const winPattern = checkWinner(board, currentPlayer);
+      if (winPattern) {
+        highlightWinner(winPattern);
+        statusEl.textContent = currentPlayer + " Wins!";
+        gameOver = true;
+        return;
+      }
+
+      if (board.every(cell => cell)) {
+        statusEl.textContent = "It's a Draw!";
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      statusEl.textContent = "Player " + currentPlayer + "'s Turn";
+
+      if (mode === "bot" && currentPlayer === "O" && !gameOver) {
+        setTimeout(botMove, 400);
       }
     }
-  } else {
-    let bestScore = Infinity;
-    for (let i = 0; i < moves.length; i++) {
-      if (moves[i].score < bestScore) {
-        bestScore = moves[i].score;
-        bestMove = i;
+
+    function botMove() {
+      let move;
+      if (difficulty === "easy") {
+        move = randomMove();
+      } else if (difficulty === "medium") {
+        move = Math.random() < 0.5 ? randomMove() : minimax(board, "O").index;
+      } else {
+        move = minimax(board, "O").index;
       }
+      makeMove(move);
     }
-  }
 
-  return moves[bestMove];
-}
+    function randomMove() {
+      const available = board.map((val, i) => val === null ? i : null).filter(v => v !== null);
+      return available[Math.floor(Math.random() * available.length)];
+    }
 
-function checkWinner(boardToCheck, player) {
-  const wins = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-  return wins.some(pattern =>
-    boardToCheck[pattern[0]] === player &&
-    boardToCheck[pattern[1]] === player &&
-    boardToCheck[pattern[2]] === player
-  );
-}
+    function minimax(newBoard, player) {
+      const availSpots = newBoard.map((val, idx) => val === null ? idx : null).filter(val => val !== null);
 
-renderBoard();
-statusEl.textContent = "Player X's Turn";
+      if (checkWinner(newBoard, "X")) return { score: -10 };
+      if (checkWinner(newBoard, "O")) return { score: 10 };
+      if (availSpots.length === 0) return { score: 0 };
 
+      const moves = [];
+      for (let i = 0; i < availSpots.length; i++) {
+        const move = {};
+        move.index = availSpots[i];
+        newBoard[availSpots[i]] = player;
+
+        const result = minimax(newBoard, player === "O" ? "X" : "O");
+        move.score = result.score;
+
+        newBoard[availSpots[i]] = null;
+        moves.push(move);
+      }
+
+      let bestMove;
+      if (player === "O") {
+        let bestScore = -Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      }
+      return moves[bestMove];
+    }
+
+    function checkWinner(b, p) {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.find(pattern => pattern.every(i => b[i] === p)) || null;
+    }
+
+    function highlightWinner(pattern) {
+      const cells = document.querySelectorAll(".cell");
+      pattern.forEach(i => {
+        cells[i].classList.add("win");
+      });
+    }
+
+    resetGame(true);
   </script>
 </body>
 </html>
