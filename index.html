@@ -93,82 +93,141 @@
 
   <script>
     const boardEl = document.getElementById("board");
-    const statusEl = document.getElementById("status");
-    let board = Array(9).fill(null);
-    let currentPlayer = "X";
-    let gameOver = false;
-    let mode = "bot"; // default
+const statusEl = document.getElementById("status");
+let board = Array(9).fill(null);
+let currentPlayer = "X";
+let gameOver = false;
+let mode = "bot"; // default
 
-    function setMode(selectedMode) {
-      mode = selectedMode;
-      resetGame();
+function setMode(selectedMode) {
+  mode = selectedMode;
+  resetGame();
+}
+
+function resetGame() {
+  board = Array(9).fill(null);
+  currentPlayer = "X";
+  gameOver = false;
+  renderBoard();
+  statusEl.textContent = "Player X's Turn";
+}
+
+function renderBoard() {
+  boardEl.innerHTML = "";
+  board.forEach((cell, i) => {
+    const cellEl = document.createElement("div");
+    cellEl.classList.add("cell");
+    cellEl.textContent = cell || "";
+    cellEl.addEventListener("click", () => makeMove(i));
+    boardEl.appendChild(cellEl);
+  });
+}
+
+function makeMove(i) {
+  if (board[i] || gameOver) return;
+  board[i] = currentPlayer;
+  renderBoard();
+
+  if (checkWinner(board, currentPlayer)) {
+    statusEl.textContent = currentPlayer + " Wins!";
+    gameOver = true;
+    return;
+  }
+
+  if (board.every(cell => cell)) {
+    statusEl.textContent = "It's a Draw!";
+    gameOver = true;
+    return;
+  }
+
+  currentPlayer = currentPlayer === "X" ? "O" : "X";
+  statusEl.textContent = "Player " + currentPlayer + "'s Turn";
+
+  if (mode === "bot" && currentPlayer === "O" && !gameOver) {
+    // Bot plays after short delay
+    setTimeout(botMove, 500);
+  }
+}
+
+function botMove() {
+  const bestMove = minimax(board, "O").index;
+  makeMove(bestMove);
+}
+
+function minimax(newBoard, player) {
+  // Available spots
+  const availSpots = newBoard
+    .map((val, idx) => val === null ? idx : null)
+    .filter(val => val !== null);
+
+  // Check terminal states
+  if (checkWinner(newBoard, "X")) {
+    return { score: -10 };
+  } else if (checkWinner(newBoard, "O")) {
+    return { score: 10 };
+  } else if (availSpots.length === 0) {
+    return { score: 0 };
+  }
+
+  // Collect all moves and their scores
+  const moves = [];
+
+  for (let i = 0; i < availSpots.length; i++) {
+    const move = {};
+    move.index = availSpots[i];
+    newBoard[availSpots[i]] = player;
+
+    if (player === "O") {
+      const result = minimax(newBoard, "X");
+      move.score = result.score;
+    } else {
+      const result = minimax(newBoard, "O");
+      move.score = result.score;
     }
 
-    function resetGame() {
-      board = Array(9).fill(null);
-      currentPlayer = "X";
-      gameOver = false;
-      renderBoard();
-      statusEl.textContent = "Player X's Turn";
-    }
+    newBoard[availSpots[i]] = null; // Undo move
+    moves.push(move);
+  }
 
-    function renderBoard() {
-      boardEl.innerHTML = "";
-      board.forEach((cell, i) => {
-        const cellEl = document.createElement("div");
-        cellEl.classList.add("cell");
-        cellEl.textContent = cell || "";
-        cellEl.addEventListener("click", () => makeMove(i));
-        boardEl.appendChild(cellEl);
-      });
-    }
-
-    function makeMove(i) {
-      if (board[i] || gameOver) return;
-      board[i] = currentPlayer;
-      renderBoard();
-
-      if (checkWinner()) {
-        statusEl.textContent = currentPlayer + " Wins!";
-        gameOver = true;
-        return;
+  // Choose best move
+  let bestMove;
+  if (player === "O") {
+    let bestScore = -Infinity;
+    for (let i = 0; i < moves.length; i++) {
+      if (moves[i].score > bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
       }
-
-      if (board.every(cell => cell)) {
-        statusEl.textContent = "It's a Draw!";
-        gameOver = true;
-        return;
-      }
-
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
-      statusEl.textContent = "Player " + currentPlayer + "'s Turn";
-
-      if (mode === "bot" && currentPlayer === "O") {
-        botMove();
+    }
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < moves.length; i++) {
+      if (moves[i].score < bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
       }
     }
+  }
 
-    function botMove() {
-      let available = board.map((val, i) => val ? null : i).filter(v => v !== null);
-      let choice = available[Math.floor(Math.random() * available.length)];
-      setTimeout(() => makeMove(choice), 500);
-    }
+  return moves[bestMove];
+}
 
-    function checkWinner() {
-      const wins = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ];
-      return wins.some(pattern =>
-        board[pattern[0]] &&
-        board[pattern[0]] === board[pattern[1]] &&
-        board[pattern[1]] === board[pattern[2]]
-      );
-    }
+function checkWinner(boardToCheck, player) {
+  const wins = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  return wins.some(pattern =>
+    boardToCheck[pattern[0]] === player &&
+    boardToCheck[pattern[1]] === player &&
+    boardToCheck[pattern[2]] === player
+  );
+}
 
-    renderBoard();
-    statusEl.textContent = "Player X's Turn";
+renderBoard();
+statusEl.textContent = "Player X's Turn";
+
   </script>
 </body>
 </html>
