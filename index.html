@@ -227,7 +227,57 @@
     function setDifficulty(level) {
       difficulty = level;
       resetGame();
+    }function minimax(newBoard, player, depth = 0) {
+  const availSpots = newBoard.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
+
+  if (checkWinner(newBoard, "X")) {
+    return { score: -10 + depth }; // player X wins → bad for O
+  } else if (checkWinner(newBoard, "O")) {
+    return { score: 10 - depth };  // player O wins → good for O
+  } else if (availSpots.length === 0) {
+    return { score: 0 };           // draw
+  }
+
+  const moves = [];
+
+  for (let i = 0; i < availSpots.length; i++) {
+    const move = {};
+    move.index = availSpots[i];
+    newBoard[availSpots[i]] = player;
+
+    if (player === "O") {
+      const result = minimax(newBoard, "X", depth + 1);
+      move.score = result.score;
+    } else {
+      const result = minimax(newBoard, "O", depth + 1);
+      move.score = result.score;
     }
+
+    newBoard[availSpots[i]] = null;
+    moves.push(move);
+  }
+
+  let bestMove;
+  if (player === "O") {
+    let bestScore = -Infinity;
+    for (let i = 0; i < moves.length; i++) {
+      if (moves[i].score > bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < moves.length; i++) {
+      if (moves[i].score < bestScore) {
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  }
+  return moves[bestMove];
+}
+
 
     function resetGame() {
       board = Array(9).fill(null);
